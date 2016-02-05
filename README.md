@@ -1,2 +1,4 @@
-# git-practice
-a git repo for demo purpose
+# Git Practice
+
+This is a git repo for demo purposes.
+Here is more stuff. 
