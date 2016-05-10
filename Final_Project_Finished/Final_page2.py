@@ -4,12 +4,8 @@ import requests
 import urlparse
 from bs4 import BeautifulSoup
 
-#Write the file
-output = open('final.csv','w')
-writer = csv.writer(output, delimiter = ",")
-
 #Get the html
-result = requests.get("https://www.como.gov/CMS/health_inspections/?type=RESTAURANT&keyword=&Submit=Search")
+result = requests.get("https://www.como.gov/CMS/health_inspections/?type=RESTAURANT&offset=100")
 
 #Make it a BeautifulSoup object
 soup = BeautifulSoup(result.content, "html.parser")
@@ -35,21 +31,23 @@ for link in soup.find(
 #Get the text I need and turn the "Resultset" type to string
     for basic in soup.find_all('div', attrs={'class':'establishmentinfo'}):
         result = basic.get_text().encode('utf-8')
+        result1 = result.replace('\nEstablishment:','').replace('\nType:',',').replace('\n','')
+        result2 = result1.replace('-',',')
         #info = [str(result)]
-        output.append(str(result))
+        output.append(str(result2))
         #print info
 
     for inspec_info in soup.find('div', attrs={'class':'inspectionheader'}):
         inspection_result = inspec_info.get_text().encode('utf-8')
+        inspection_result1 = inspection_result.replace('Inspection Date:','').replace('Type:','').replace('Comments:','').replace('Critical Violations:','').replace('Non-Critical Violations:','').replace('\n','')
+        inspection_result2 = inspection_result1.replace('Non-','')
         #inspection_info = [str(inspection_result)]
-        output.append(str(inspection_result))
+        output.append(str(inspection_result2))
         #print inspection_info
 
-        name = output['Establishment'].encode('utf-8')
+    print output
 
-    #print output
 
-    write.writerow([name])
     
 
 
